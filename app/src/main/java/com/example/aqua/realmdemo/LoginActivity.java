@@ -28,32 +28,6 @@ public class LoginActivity extends AppCompatActivity {
 
         loginbt = (Button) findViewById(R.id.loginBT);
         signupbt = (Button) findViewById(R.id.signupBT);
-        //login click
-        loginbt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String enteredusername = usernameet.getText().toString();
-                String enteredpassword = passwordet.getText().toString();
-                Realm.init(LoginActivity.this);
-                RealmResults<User> realmResults = DatabaseTask.getUserDetails(enteredusername);
-                for (int i = 0; i < realmResults.size(); i++) {
-
-                    User user = realmResults.get(i);
-                    String stemail = user.getEmail();
-                    String stpwd = user.getPassword();
-                    String stname = user.getName();
-                    if (enteredusername.equals(stname) && enteredpassword.equals(stpwd)) {
-                       // Toast.makeText(LoginActivity.this, stname + " " + stemail + " " + stpwd, Toast.LENGTH_LONG).show();
-                        Toast.makeText(LoginActivity.this, "Login Successful\n welcome "+stname, Toast.LENGTH_LONG).show();
-
-                    }else
-                    {
-                        Toast.makeText(LoginActivity.this, "Invalid username or password", Toast.LENGTH_LONG).show();
-
-                    }
-                }
-            }
-        });
 
         //signup click
         signupbt.setOnClickListener(new View.OnClickListener() {
@@ -64,6 +38,50 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
+        //login click
+        loginbt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String enteredusername = usernameet.getText().toString();
 
+                String enteredpassword = passwordet.getText().toString();
+
+
+                Realm.init(LoginActivity.this);
+                RealmResults<User> realmResults = DatabaseTask.getUserDetails(enteredusername);
+                boolean match = checkUsernamepwd(realmResults, enteredusername, enteredpassword);
+
+                if (match == true) {
+                    Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(LoginActivity.this, "Invalid username and password", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+    }
+
+    public boolean checkUsernamepwd(RealmResults<User> realmResults, String enteredusername, String enteredpassword) {
+        for (int i = 0; i < realmResults.size(); i++) {
+
+            User user = realmResults.get(i);
+            String stemail = user.getEmail();
+            String stpwd = user.getPassword();
+            String stname = user.getName();
+
+
+            if (enteredusername.equals(stemail) && enteredpassword.equals(stpwd)) {
+                Toast.makeText(LoginActivity.this, "valid username and password", Toast.LENGTH_LONG).show();
+
+                return true;
+
+
+            } else {
+                Toast.makeText(LoginActivity.this, "Invalid username or password", Toast.LENGTH_LONG).show();
+                return false;
+            }
+        }
+        return false;
     }
 }

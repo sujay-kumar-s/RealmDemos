@@ -1,6 +1,7 @@
 package com.example.aqua.realmdemo;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by aqua on 12/18/2016.
@@ -9,6 +10,7 @@ import io.realm.RealmObject;
 public class User extends RealmObject {
 
     private String name;
+   // @PrimaryKey
     private String email;
     private String password;
 
